@@ -1,5 +1,6 @@
 <html lang="en">
   <head>
+    <link rel="shortcut icon" type="image/png" href="../assets/img/logo-owl-color.png"/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,13 +42,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#" id="navbar-header">FAUOWLS</a>
+          <a class="navbar-brand" href="#" id="navbar-header"><img src="../assets/img/logo-owl-color.svg" width="45" height="25"/></a>
+          <a class="navbar-brand" href="#" id="navbar-header" style="color: #428bca">FAUOWLS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="#" style="color:#428bca">Dashboard</a></li>
+            <li><a href="#" style="color:#428bca">Settings</a></li>
+            <li><a href="#" style="color:#428bca">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -55,7 +57,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-3 col-md-2 sidebar"  style="background-color:#036">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Inventory <span class="sr-only">(current)</span></a></li>
             <li><a href="#">Other</a></li>
@@ -76,6 +78,7 @@
             <input type="SUBMIT" name="submit" value="Search" />
           </form>
             </div>
+          <button type="button">Add Items</button>
           </div>
         
 
@@ -98,6 +101,7 @@
                   <th>Bulk Markup</th>
                   <th>Cost To Replace</th>
                   <th>Cost Average</th>
+                  <th>Edit/Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,6 +130,7 @@ while($row = mysqli_fetch_array($resultSet)){
     echo "<td>" . $row['bulk_markup'] . "</td>";
     echo "<td>" . $row['cost_to_replace'] . "</td>";
     echo "<td>" . $row['cost_avg'] . "</td>";
+    echo "<td>" . "<button type='button'>Edit</button>" . "<button type='button'>Delete</button>" . "</td>";
     echo "</tr>";
 }
 ?>    
