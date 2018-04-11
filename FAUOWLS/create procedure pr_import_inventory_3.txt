@@ -1,0 +1,31 @@
+CREATE DEFINER=`CEN4010_S2018g03`@`localhost` PROCEDURE `pr_import_inventory`(OUT RESULT INT)
+begin
+/* DELETE NULL VALUE PRIMARY KEY IN IMPORT STAGING TABLE  */
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+SET RESULT=-1;
+START TRANSACTION;
+delete from Import_Inventory where perry_part_num is null;
+-- create categories that don't exist and have a valid code
+insert into Categories (category_code, category_name) select category_code,max(category_name) from Import_Inventory where category_code <> 0 and category_code is not null and category_name <> '' and category_name is not null and category_code not in (select category_code from Categories) group by category_code;
+-- create categories that don't exist and don't have a valid code
+insert into Categories ( category_name) select distinct category_name
+from Import_Inventory
+where (category_code = 0 or category_code is null) and category_name <> '' and category_name is not null and category_name not in (select category_name from Categories);
+-- update import file with category code for new Categories
+update Import_Inventory i inner join Categories c on i.category_name = c.category_name and i.category_code = 0 or i.category_code is null set i.category_code = c.category_code;
+-- DELETE VALUES THAT ALREADY EXIST IN THE INVENTORY TABLE, WOULD BE REPLACED WITH THE IMPORT RECORDS
+delete from Inventory where perry_part_num in (select perry_part_num from Import_Inventory);
+-- INSERT NEW RECORDS FROM IMPORT STAGING TABLE
+insert into Inventory (perry_part_num,short_description,long_description,location_in_lab,quantity,purchase_or_rent,retail_price,retail_price_promo,retail_markup,jobber_price,jobber_markup,bulk_price,bulk_markup,cost_to_replace,cost_avg,category_code) SELECT distinct perry_part_num, ifnull(short_description,''), ifnull(long_description,''), ifnull(location_in_lab,''), ifnull(quantity,0), ifnull(purchase_or_rent,''), ifnull(retail_price,0), ifnull(retail_price_promo,0), ifnull(retail_markup,0), ifnull(jobber_price,0), ifnull(jobber_markup,0), ifnull(bulk_price,0), ifnull(bulk_markup,0), ifnull(cost_to_replace,0), ifnull(cost_avg,0), ifnull(category_code,0) FROM Import_Inventory;
+-- delete possible duplicate barcodes  delete from Barcodes where barcode in (select barcode1 from import_inventory);  
+delete from Barcodes where barcode in (select barcode2 from Import_Inventory);
+delete from Barcodes where barcode in (select barcode3 from Import_Inventory);
+delete from Barcodes where barcode in (select barcode4 from Import_Inventory);
+delete from Barcodes where barcode in (select barcode5 from Import_Inventory);
+-- INSERT NEW BARCODES
+insert into Barcodes (perry_part_num,barcode) select distinct perry_part_num,barcode1
+from Import_Inventory where barcode1 <> '' and barcode1 is not null;
+insert into Barcodes (perry_part_num,barcode) select distinct perry_part_num,barcode2 from Import_Inventory where barcode2 <> '' and barcode2 is not null; insert into Barcodes (perry_part_num,barcode) select distinct perry_part_num,barcode3 from Import_Inventory where barcode3 <> '' and barcode3 is not null; insert into Barcodes (perry_part_num,barcode) select distinct perry_part_num,barcode4 from Import_Inventory where barcode4 <> '' and barcode4 is not null;
+insert into Barcodes (perry_part_num,barcode) select distinct perry_part_num,barcode5 from Import_Inventory where barcode5 <> '' and barcode5 is not null;
+COMMIT;SET RESULT=0;
+end

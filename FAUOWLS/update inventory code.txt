@@ -1,0 +1,39 @@
+PROCEDURE 	
+begin
+
+SET vorder_num = uuid();
+insert into User_orders (order_num,z_num,order_date,order_status) 
+values (vorder_num,vz_num,vorder_date,0);
+
+end;
+
+PROCEDURE pr_user_order_item(IN vorder_num varchar(255),IN vorder_line INT, IN vorder_line_total INT, IN vperry_part_num varchar(255), IN vz_num int(10),vorder_date timestamp, IN vquantity smallint(5), IN vprice_charged_per FLOAT, IN vnet_profit FLOAT, IN vstudent_bool TINYINT(1), IN vfaculty_bool TINYINT(1), IN vfor_personal_bool TINYINT(1), IN vrented_bool TINYINT(1), IN vreturn_by DATETIME, IN vreturned_bool TINYINT(1), IN vdelivered_bool TINYINT(1))
+begin
+
+insert into User_order_items (order_num,z_num,perry_part_num, quantity, price_charged_per, net_profit, student_bool, faculty_bool, for_personal_bool, rented_bool, return_by, returned_bool, delivered_bool) 
+values (vorder_num,vz_num,vorder_date, vquantity, vprice_charged_per, vnet_profit, vstudent_bool, vfaculty_bool, vfor_personal_bool, vrented_bool, vreturn_by, vreturned_bool, vdelivered_bool);
+
+insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) values ('ORDER',vorder_num,vorder_date,4,vperry_part_num, vquantity)
+
+if vorder_line_total == vorder_line then update User_orders set order_status = 1 where order_num = vorder_num;
+end if;
+end;
+
+create trigger tr_i_Inventory_Transaction after insert on Inventory_Transaction 
+for each row
+begin
+update Inventory set quantity = quantity + ((3 - NEW.operation) * NEW.quantity) where Inventory.perry_part_num = NEW.perry_part_num;
+end ;
+
+create trigger tr_d_Inventory_Transaction after delete on Inventory_Transaction 
+for each row
+begin
+update Inventory set quantity = quantity - ((3 - OLD.operation) * OLD.quantity) where Inventory.perry_part_num = OLD.perry_part_num;
+end ;
+
+create trigger tr_u_Inventory_Transaction after update on Inventory_Transaction 
+for each row
+begin
+update Inventory set quantity = quantity + ((3 - NEW.operation) * NEW.quantity) where Inventory.perry_part_num = NEW.perry_part_num;
+update Inventory set quantity = quantity - ((3 - OLD.operation) * OLD.quantity) where Inventory.perry_part_num = OLD.perry_part_num;
+end ;
