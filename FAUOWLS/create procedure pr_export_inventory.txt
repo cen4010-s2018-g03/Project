@@ -1,0 +1,220 @@
+create procedure pr_export_inventory()
+
+begin
+      -- prepares import inventory as a buffer to export
+
+	truncate table Import_Inventory ;
+
+      
+
+      -- insert into Import_Inventory from a JOIN of INVENTORY, CATEGORY AND BARCODE TABLES 
+
+      INSERT INTO Import_Inventory
+
+           (perry_part_num
+
+           ,short_description
+
+           ,long_description
+
+           ,location_in_lab
+
+           ,quantity
+
+           ,purchase_or_rent
+
+           ,retail_price
+
+           ,retail_price_promo
+
+           ,retail_markup
+
+           ,jobber_price
+
+           ,jobber_markup
+
+           ,bulk_price
+
+           ,bulk_markup
+
+           ,cost_to_replace
+
+           ,cost_avg
+
+           ,category_code
+
+           ,category_name
+
+           ,barcode1
+
+           ,barcode2
+
+           ,barcode3
+
+           ,barcode4
+
+           ,barcode5) 
+
+      select perry_part_num
+
+           ,short_description
+
+           ,long_description
+
+           ,location_in_lab
+
+           ,quantity
+
+           ,purchase_or_rent
+
+           ,retail_price
+
+           ,retail_price_promo
+
+           ,retail_markup
+
+           ,jobber_price
+
+           ,jobber_markup
+
+           ,bulk_price
+
+           ,bulk_markup
+
+           ,cost_to_replace
+
+           ,cost_avg
+
+           ,ifnull(c.category_code,0)
+
+           ,ifnull(c.category_name,'Default')
+
+           ,''
+
+           ,''
+
+           ,''
+
+           ,''
+
+           ,''
+
+       from Inventory i
+
+       left join Categories c on i.category_code = c.category_code;
+
+     
+
+     -- update barcode values from barcode table
+
+     
+
+    UPDATE Import_Inventory i
+
+     join Barcodes b on i.perry_part_num = b.perry_part_num
+
+     SET barcode1 = b.barcode; 
+
+ 
+
+      UPDATE Import_Inventory i
+
+     join Barcodes b on i.perry_part_num = b.perry_part_num
+
+     SET barcode2 = b.barcode 
+
+     where b.barcode <> i.barcode1;
+
+ 
+
+      UPDATE Import_Inventory i
+
+     join Barcodes b on i.perry_part_num = b.perry_part_num
+
+     SET barcode3 = b.barcode 
+
+     where b.barcode <> i.barcode1 and b.barcode <> i.barcode2;
+
+ 
+
+      UPDATE Import_Inventory i
+
+     join Barcodes b on i.perry_part_num = b.perry_part_num
+
+     SET barcode4 = b.barcode 
+
+     where b.barcode <> i.barcode1 and b.barcode <> i.barcode2 and b.barcode <> i.barcode3; 
+
+ 
+
+      UPDATE Import_Inventory i
+
+     join Barcodes b on i.perry_part_num = b.perry_part_num
+
+     SET barcode5 = b.barcode 
+
+     where b.barcode <> i.barcode1 and b.barcode <> i.barcode2 and b.barcode <> i.barcode3 and b.barcode <> i.barcode4;  
+
+  
+
+  -- export file to csv
+
+  
+
+  SELECT perry_part_num
+
+           ,short_description
+
+           ,long_description
+
+           ,location_in_lab
+
+           ,quantity
+
+           ,purchase_or_rent
+
+           ,retail_price
+
+           ,retail_price_promo
+
+           ,retail_markup
+
+           ,jobber_price
+
+           ,jobber_markup
+
+           ,bulk_price
+
+           ,bulk_markup
+
+           ,cost_to_replace
+
+           ,cost_avg
+
+           ,category_code
+
+           ,category_name
+
+           ,barcode1
+
+           ,barcode2
+
+           ,barcode3
+
+           ,barcode4
+
+           ,barcode5
+
+      FROM Import_Inventory 
+
+      INTO OUTFILE '/home/CEN4010_S2018g03/public_html/export/orders.csv'
+
+      FIELDS TERMINATED BY ','
+
+      ENCLOSED BY '"'
+
+      LINES TERMINATED BY '\n';
+
+      
+
+end
