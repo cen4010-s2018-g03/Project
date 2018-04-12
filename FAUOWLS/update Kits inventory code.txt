@@ -1,0 +1,39 @@
+create procedure pr_kits_creation(IN vitem varchar(255), IN vinput varchar(255), IN vline int, IN vquantity int)
+begin
+
+insert into Kits (item, input, line, quantity)
+values (vitem, vinput, vline, vquantity);
+
+end;
+
+
+create procedure pr_kits_inventory(IN vperry_part_num varchar(255), IN vquantity int, IN vdate date)
+begin
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+START TRANSACTION;
+SELECT @v_order;
+SET @v_order = uuid();
+insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) select 'KIT', @v_order, vdate, 4, input, quantity * vquatity FROM Kits where item = vperry_part_num;
+insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) values ('KIT',@v_order,vdate,2,vperry_part_num, vquantity);
+COMMIT;
+end;
+
+
+
+declare v_counter int default 1;--Variable to count the loop
+declare v_input_quantity int default 0;--Quantity of each input to deduct from inventory
+declare v_order varchar(255) default '0';--Order number to be generated
+declare v_input varchar(255);--Code of input for each line
+SET v_order = uuid();
+--Loop to create a transaction for each input of the Kit and update its inventory
+
+while (v_counter <= SELECT line_total FROM Kits WHERE item=vperry_part_num)
+SET v_input_quantity = (SELECT quantity FROM Kits where item = vperry_part_num AND line=v_counter)*vquantity;--Define the amount to reduce from each input
+SET v_input = SELECT input FROM Kits where item = vperry_part_num AND line=v_counter;
+insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) values ('KIT',v_order,vdate,4,vinput, v_input_quantity);
+set v_counter=v_counter+1;
+end while;
+--Now that all inputs have been reduced of its inventory we create a transaction to update the Kit inventory
+insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) values ('KIT',v_order,vdate,2,vperry_part_num, vquantity);
+
+end;
