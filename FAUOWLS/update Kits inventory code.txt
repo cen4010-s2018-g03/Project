@@ -13,7 +13,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 START TRANSACTION;
 SELECT @v_order;
 SET @v_order = uuid();
-insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) select 'KIT', @v_order, vdate, 4, input, quantity * vquatity FROM Kits where item = vperry_part_num;
+insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) select 'KIT', @v_order, vdate, 4, input, quantity * vquantity FROM Kits where item = vperry_part_num;
 insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) values ('KIT',@v_order,vdate,2,vperry_part_num, vquantity);
 COMMIT;
 end;
