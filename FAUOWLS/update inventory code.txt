@@ -1,4 +1,4 @@
-PROCEDURE 	
+PROCEDURE pr_user_order(IN vz_num int, IN vorder_date timestamp, OUT vorder_num varchar(255))
 begin
 
 SET vorder_num = uuid();
