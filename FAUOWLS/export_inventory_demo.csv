@@ -1,0 +1,3 @@
+perry_part_num,short_description,long_description,location_in_lab,quantity,purchase_or_rent,retail_price,retail_price_promo,retail_markup,jobber_price,jobber_markup,bulk_price,bulk_markup,cost_to_replace,cost_avg,category_code,category_name,barcode1,barcode2,barcode3,barcode4,barcode5
+TestItem13,Item from DEMO,,Front Desk,150,Purchase,0,0.12,5,0.18,6,0.06,2,0.05,0.03,0,Default,,,,,
+TestItem12,Item from DEMO,,Front Desk,1500,Purchase,0.4,0.12,5,0.18,6,0.06,2,0.05,0.03,0,Default,,,,,
