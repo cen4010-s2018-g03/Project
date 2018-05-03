@@ -1,3 +1,6 @@
+<?php
+$id = $_GET['id'];
+?>  
 <?PHP
 require_once("/home/CEN4010_S2018g03/public_html/FAUOWLS/security/include/membersite_config.php");
 
@@ -78,33 +81,44 @@ if(!$fgmembersite->CheckLogin())
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Kits Inventory Process</h1>
+          <h1 class="page-header">Inventory Movement Detail</h1>
 
-          <div class="row placeholders">
+           <div class="row placeholders">
               <div class="col-xs-6 col-sm-3 placeholder">
-              
+			  <form action="Inventory_movement_process.php" method="post">
+			 <input type="text" name="id" value = "<?php echo $id;?>" readonly>
+            <input type="text" class="form-control" placeholder="Enter Quantity to add" name="qty">
+            <input type="SUBMIT" name="submit" value="Generate Inventory Movement" />
           </form>
 		  </div>
           </div>
         
+
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Perry Part #</th>
+                  <th>Quantity</th>
+				  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
             
 <?php
 //connect to db
 $mysqli = NEW MySQLi("localhost", "CEN4010_S2018g03", "cen4010_s2018", "CEN4010_S2018g03");
-$id = $_POST["id"];
-$qty = $_POST["qty"];
-$dte = date("m/d/y");
+//$id = $_GET['id'];
 //$resultSet = $mysqli->query("select item, input, quantity from Kits k where '$id' = k.item");
+$resultSet = $mysqli->query("select distinct perry_part_num,quantity, location_in_lab from Inventory where '$id' = perry_part_num;");
 
-if($result = $mysqli->query("call pr_kits_inventory('$id', $qty, '$dte')") or die("Query fail: " . mysqli_error($mysqli))){
-	
-	echo "<tr>";
-	echo "<td>" . "Successful update of inventory" . "</td>";
-	echo "</tr>";
+while($row = mysqli_fetch_array($resultSet)){
+    echo "<tr>";
+	echo "<td>" . $row['perry_part_num'] . "</td>";
+    echo "<td>" . $row['quantity'] . "</td>";
+	echo "<td>" . $row['location_in_lab'] . "</td>";
+    echo "</tr>";
 }
-
-//$result = $mysqli->query("call pr_kits_inventory('$id', $qty, '$dte')") or die("Query fail: " . mysqli_error($mysqli));
-
 ?>    
             </tbody>
             </table>

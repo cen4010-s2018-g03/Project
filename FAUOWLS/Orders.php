@@ -7,6 +7,7 @@ if(!$fgmembersite->CheckLogin())
     exit;
 }
 ?>
+
 <html lang="en">
   <head>
     <link rel="shortcut icon" type="image/png" href="../assets/img/logo-owl-color.png"/>
@@ -56,6 +57,7 @@ if(!$fgmembersite->CheckLogin())
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            
             <li><a href="../security/logout.php" style="color:#428bca">Logout</a></li>
           </ul>
         </div>
@@ -78,7 +80,7 @@ if(!$fgmembersite->CheckLogin())
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Kits Inventory Process</h1>
+          <h1 class="page-header">Pending Orders</h1>
 
           <div class="row placeholders">
               <div class="col-xs-6 col-sm-3 placeholder">
@@ -87,24 +89,34 @@ if(!$fgmembersite->CheckLogin())
 		  </div>
           </div>
         
+
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Z Number</th>
+				  <th>Order Date</th>
+                </tr>
+              </thead>
+              <tbody>
             
 <?php
 //connect to db
 $mysqli = NEW MySQLi("localhost", "CEN4010_S2018g03", "cen4010_s2018", "CEN4010_S2018g03");
-$id = $_POST["id"];
-$qty = $_POST["qty"];
-$dte = date("m/d/y");
-//$resultSet = $mysqli->query("select item, input, quantity from Kits k where '$id' = k.item");
 
-if($result = $mysqli->query("call pr_kits_inventory('$id', $qty, '$dte')") or die("Query fail: " . mysqli_error($mysqli))){
-	
-	echo "<tr>";
-	echo "<td>" . "Successful update of inventory" . "</td>";
-	echo "</tr>";
+$resultSet = $mysqli->query("select distinct order_num,z_num, order_date from User_orders where order_status=1");
+
+
+while($row = mysqli_fetch_array($resultSet)){
+    echo "<tr>";
+    echo "<td>" . $row['order_num'] . "</td>";
+    echo "<td>" . $row['z_num'] . "</td>";
+	echo "<td>" . $row['order_date'] . "</td>";
+	echo "<td><a href='Orders_detail.php?id=".$row['order_num']."'>Detail</a></td>";
+    //echo "<td>" . "<button type='button'>Completed</button>" . "</td>";
+    echo "</tr>";
 }
-
-//$result = $mysqli->query("call pr_kits_inventory('$id', $qty, '$dte')") or die("Query fail: " . mysqli_error($mysqli));
-
 ?>    
             </tbody>
             </table>

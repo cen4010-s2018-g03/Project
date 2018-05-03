@@ -78,7 +78,7 @@ if(!$fgmembersite->CheckLogin())
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Kits Inventory Process</h1>
+          <h1 class="page-header">Inventory Movement Process</h1>
 
           <div class="row placeholders">
               <div class="col-xs-6 col-sm-3 placeholder">
@@ -96,7 +96,7 @@ $qty = $_POST["qty"];
 $dte = date("m/d/y");
 //$resultSet = $mysqli->query("select item, input, quantity from Kits k where '$id' = k.item");
 
-if($result = $mysqli->query("call pr_kits_inventory('$id', $qty, '$dte')") or die("Query fail: " . mysqli_error($mysqli))){
+if($result = $mysqli->query("insert into Inventory_Transaction (transaction_type, transaction_num, transaction_date, operation, perry_part_num, quantity) values ('INVENTORY MOVEMENT', 'NA', '$dte', 2, '$id', '$qty') ") or die("Query fail: " . mysqli_error($mysqli))){
 	
 	echo "<tr>";
 	echo "<td>" . "Successful update of inventory" . "</td>";

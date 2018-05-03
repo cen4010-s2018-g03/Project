@@ -56,13 +56,14 @@ if(!$fgmembersite->CheckLogin())
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            
             <li><a href="../security/logout.php" style="color:#428bca">Logout</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <div class="container-fluid">
+   <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar"  style="background-color:#036">
           <ul class="nav nav-sidebar">
@@ -78,7 +79,7 @@ if(!$fgmembersite->CheckLogin())
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Kits Inventory Process</h1>
+          <h1 class="page-header">Order Status Process</h1>
 
           <div class="row placeholders">
               <div class="col-xs-6 col-sm-3 placeholder">
@@ -92,14 +93,12 @@ if(!$fgmembersite->CheckLogin())
 //connect to db
 $mysqli = NEW MySQLi("localhost", "CEN4010_S2018g03", "cen4010_s2018", "CEN4010_S2018g03");
 $id = $_POST["id"];
-$qty = $_POST["qty"];
-$dte = date("m/d/y");
 //$resultSet = $mysqli->query("select item, input, quantity from Kits k where '$id' = k.item");
 
-if($result = $mysqli->query("call pr_kits_inventory('$id', $qty, '$dte')") or die("Query fail: " . mysqli_error($mysqli))){
+if($result = $mysqli->query("update User_orders set order_status = 0 where order_num = '$id'") or die("Query fail: " . mysqli_error($mysqli))){
 	
 	echo "<tr>";
-	echo "<td>" . "Successful update of inventory" . "</td>";
+	echo "<td>" . "Successful Update of Order Status" . "</td>";
 	echo "</tr>";
 }
 

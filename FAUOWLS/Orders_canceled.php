@@ -1,3 +1,12 @@
+<?PHP
+require_once("/home/CEN4010_S2018g03/public_html/FAUOWLS/security/include/membersite_config.php");
+
+if(!$fgmembersite->CheckLogin())
+{
+    $fgmembersite->RedirectToURL("/~CEN4010_S2018g03/FAUOWLS/security/login.php");
+    exit;
+}
+?>
 <html lang="en">
   <head>
     <link rel="shortcut icon" type="image/png" href="../assets/img/logo-owl-color.png"/>
@@ -47,9 +56,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" style="color:#428bca">Dashboard</a></li>
-            <li><a href="#" style="color:#428bca">Settings</a></li>
-            <li><a href="#" style="color:#428bca">Logout</a></li>
+           <li><a href="../security/logout.php" style="color:#428bca">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -59,13 +66,14 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar"  style="background-color:#036">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Inventory <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="index.php">Inventory <span class="sr-only">(current)</span></a></li>
+			<li><a href="Inventory_movement.php">Inventory Movement</a></li>
             <li><a href="images.php">Images</a></li>
             <li><a href="Orders.php">Pending Orders</a></li>
             <li><a href="Orders_past.php">Previous Orders</a></li>
             <li><a href="Orders_canceled.php">Canceled Orders</a></li>
 			<li><a href="Return_rented.php">Return Rented Items</a></li>
-            <li><a href="Kit_Creation3.php">Kits Creation</a></li>
+            <li><a href="Kit_creation.php">Kits Creation</a></li>
             <li><a href="kit.php">Kits Inventory</a></li>
           </ul>
         </div>
@@ -74,9 +82,7 @@
 
           <div class="row placeholders">
               <div class="col-xs-6 col-sm-3 placeholder">
-              <form class="navbar-form navbar-left" method="POST">
-            <input type="text" class="form-control" placeholder="Enter Part #" name="search">
-            <input type="SUBMIT" name="submit" value="Search" />
+             
           </form>
 		  </div>
           </div>

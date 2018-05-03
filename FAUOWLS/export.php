@@ -27,10 +27,10 @@
 //execute query 
 			$result = @mysqli_query($Connect,$sql) or die("Couldn't execute query:<br>" . mysqli_error($Connect). "<br>" . mysqli_errno($Connect)); 
 			//$result = @mysqli_query($sql,$Connect);
-			$file_ending = "xls";
+			$file_ending = "csv";
 //header info for browser
-			header("Content-Type: application/xls");    
-			header("Content-Disposition: attachment; filename=$filename.xls");  
+			header("Content-Type: application/csv");    
+			header("Content-Disposition: attachment; filename=$filename.csv");  
 			header("Pragma: no-cache"); 
 			header("Expires: 0");
 /*******Start of Formatting for Excel*******/   
