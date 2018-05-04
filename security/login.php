@@ -46,6 +46,9 @@ if(isset($_POST['submitted']))
     <input type='submit' name='Submit' value='Submit' />
 </div>
 <div class='short_explanation'><a href='/~CEN4010_S2018g03/FAUOWLS/security/reset-pwd-req.php'>Forgot Password?</a></div>
+<br>
+<div class='short_explanation'><a href='/~CEN4010_S2018g03/FAUOWLS/security/register.php'>Don't have an account?</a></div>
+
 </fieldset>
 </form>
 <!-- client-side Form Validations:
